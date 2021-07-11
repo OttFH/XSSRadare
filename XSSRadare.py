@@ -171,6 +171,7 @@ def fuzz_get_urls(url):
     number_of_found_xss = 0
     scan_url = get_url(url)
     params = decode_url(url)
+    browser = webdriver.Firefox()
     for payload in get_payloads():
 
         for param in params.keys():
@@ -178,7 +179,6 @@ def fuzz_get_urls(url):
             params[param] = payload
             url_to_send = encode_url(scan_url, params)
             raw_params = urllib.parse.urlencode(params)
-            browser = webdriver.Firefox()
             if cookies_option is not None:
                 browser.get(url)
                 browser.add_cookie(cookie_dict)
@@ -200,8 +200,8 @@ def fuzz_get_urls(url):
                 if negative is True:
                     print_negative_scan(url_to_send)
 
-            browser.quit()
             params[param] = previous_value
+    browser.quit()
     print_scan_finish(number_of_found_xss)
 
 def fuzz_urls_file(fi):
