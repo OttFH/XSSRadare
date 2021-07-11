@@ -179,13 +179,14 @@ def fuzz_get_urls(url):
             params[param] = payload
             url_to_send = encode_url(scan_url, params)
             raw_params = urllib.parse.urlencode(params)
-            if cookies_option is not None:
-                browser.get(url)
-                browser.add_cookie(cookie_dict)
-            browser.get(url_to_send)
-            time.sleep(timeout)
 
             try:
+                if cookies_option is not None:
+                    browser.get(url)
+                    browser.add_cookie(cookie_dict)
+                browser.get(url_to_send)
+                time.sleep(timeout)
+
                 if browser.switch_to.alert.text is not None:
                     if stop is True:
                         number_of_found_xss = number_of_found_xss + 1
@@ -199,6 +200,8 @@ def fuzz_get_urls(url):
             except NoAlertPresentException:
                 if negative is True:
                     print_negative_scan(url_to_send)
+            except Exception as e:
+                print(url_to_send, e)
 
             params[param] = previous_value
     browser.quit()
