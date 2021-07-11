@@ -105,7 +105,7 @@ def get_payloads():
     else:
         payload_file = open("payloads.txt", "r")
         print("Using payloads from file payloads.txt")
-    payloads = payload_file.read().splitlines()
+    payloads = filter(lambda line: len(line) > 0, payload_file.read().splitlines())
     return payloads
 
 
